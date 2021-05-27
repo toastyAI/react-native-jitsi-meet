@@ -1,6 +1,10 @@
 package com.reactnativejitsimeet;
 
+import android.content.Intent;
 import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.net.URL;
 import java.net.MalformedURLException;
 
@@ -10,6 +14,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.bridge.ReadableMap;
+
+import org.jitsi.meet.sdk.BroadcastIntentHelper;
 
 @ReactModule(name = RNJitsiMeetModule.MODULE_NAME)
 public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
@@ -107,5 +113,54 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                 }
             }
         });
+    }
+
+    @ReactMethod
+    public void openChat(String to) {
+        try {
+            Log.d("JitsiMeet", "openChat: Performing open chat");
+            Intent chatBroadcastIntent = BroadcastIntentHelper.buildOpenChatIntent(to);
+            LocalBroadcastManager.getInstance(getReactApplicationContext()).sendBroadcast(chatBroadcastIntent);
+        }
+        catch(Exception e) {
+            Log.d("JitsiMeet", "openChat: Error in open chat");
+        }
+    }
+
+
+    @ReactMethod
+    public void closeChat() {
+        try {
+            Log.d("JitsiMeet", "closeChat: Performing close chat");
+            Intent chatBroadcastIntent = BroadcastIntentHelper.buildCloseChatIntent();
+            LocalBroadcastManager.getInstance(getReactApplicationContext()).sendBroadcast(chatBroadcastIntent);
+        }
+        catch(Exception e) {
+            Log.d("JitsiMeet", "closeChat: Error in close chat");
+        }
+    }
+
+    @ReactMethod
+    public void setAudioMuted(Boolean muted) {
+        try {
+            Log.d("JitsiMeet", "setAudioMuted: Performing setAudioMuted");
+            Intent audioBroadcastIntent = BroadcastIntentHelper.buildSetAudioMutedIntent(muted);
+            LocalBroadcastManager.getInstance(getReactApplicationContext()).sendBroadcast(audioBroadcastIntent);
+        }
+        catch(Exception e) {
+            Log.d("JitsiMeet", "setAudioMuted: Error in setAudioMuted");
+        }
+    }
+
+    @ReactMethod
+    public void setVideoMuted(Boolean muted) {
+        try {
+            Log.d("JitsiMeet", "setVideoMuted: Performing setVideoMuted");
+            Intent videoBroadcastIntent = BroadcastIntentHelper.buildSetVideoMutedIntent(muted);
+            LocalBroadcastManager.getInstance(getReactApplicationContext()).sendBroadcast(videoBroadcastIntent);
+        }
+        catch(Exception e) {
+            Log.d("JitsiMeet", "setVideoMuted: Error in setVideoMuted");
+        }
     }
 }

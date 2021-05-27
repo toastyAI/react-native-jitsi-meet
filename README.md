@@ -47,6 +47,10 @@ class VideoCall extends React.Component {
       JitsiMeet.call(url, userInfo);
       /* You can also use JitsiMeet.audioCall(url) for audio only call */
       /* You can programmatically end the call with JitsiMeet.endCall() */
+      /* You can programmatically open the chat with JitsiMeet.openChat(String: to) */
+      /* You can programmatically close the chat with JitsiMeet.closeChat() */
+      /* You can programmatically mute the audio with JitsiMeet.setAudioMuted(Boolean: muted) */
+      /* You can programmatically open the video with JitsiMeet.setVideoMuted(Boolean: muted) */
     }, 1000);
   }
 

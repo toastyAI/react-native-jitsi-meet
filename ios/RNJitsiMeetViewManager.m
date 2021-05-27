@@ -82,10 +82,10 @@ RCT_EXPORT_METHOD(endCall)
     });
 }
 
-RCT_EXPORT_METHOD(openChat)
+RCT_EXPORT_METHOD(openChat:(NSString *)to)
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [jitsiMeetView openChat];
+        [jitsiMeetView openChat:to];
     });
 }
 
@@ -93,6 +93,20 @@ RCT_EXPORT_METHOD(closeChat)
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [jitsiMeetView closeChat];
+    });
+}
+
+RCT_EXPORT_METHOD(setAudioMuted:(BOOL)muted)
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [jitsiMeetView setAudioMuted:muted];
+    });
+}
+
+RCT_EXPORT_METHOD(setVideoMuted:(BOOL)muted)
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [jitsiMeetView setVideoMuted:muted];
     });
 }
 
