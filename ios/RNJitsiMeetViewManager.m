@@ -82,6 +82,20 @@ RCT_EXPORT_METHOD(endCall)
     });
 }
 
+RCT_EXPORT_METHOD(openChat)
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [jitsiMeetView openChat];
+    });
+}
+
+RCT_EXPORT_METHOD(closeChat)
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [jitsiMeetView closeChat];
+    });
+}
+
 #pragma mark JitsiMeetViewDelegate
 
 - (void)conferenceJoined:(NSDictionary *)data {
