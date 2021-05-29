@@ -38,7 +38,7 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void call(String url, ReadableMap userInfo) {
+    public void call(String url, ReadableMap userInfo, ReadableMap meetOptions, ReadableMap meetFeatureFlags) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -61,8 +61,28 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                     }
                     RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
                             .setRoom(url)
-                            .setAudioOnly(false)
+                            .setSubject(meetOptions.getString("subject"))
+                            .setAudioMuted(meetOptions.getBoolean("audioMuted"))
+                            .setAudioOnly(meetOptions.getBoolean("audioOnly"))
+                            .setVideoMuted(meetOptions.getBoolean("videoMuted"))
                             .setUserInfo(_userInfo)
+                            .setFeatureFlag("add-people.enabled", meetFeatureFlags.getBoolean("add-people.enabled"))
+                            .setFeatureFlag("calendar.enabled", meetFeatureFlags.getBoolean("calendar.enabled"))
+                            .setFeatureFlag("call-integration.enabled", meetFeatureFlags.getBoolean("call-integration.enabled"))
+                            .setFeatureFlag("chat.enabled", meetFeatureFlags.getBoolean("chat.enabled"))
+                            .setFeatureFlag("close-captions.enabled", meetFeatureFlags.getBoolean("close-captions.enabled"))
+                            .setFeatureFlag("invite.enabled", meetFeatureFlags.getBoolean("invite.enabled"))
+                            .setFeatureFlag("ios.recording.enabled", meetFeatureFlags.getBoolean("ios.recording.enabled"))
+                            .setFeatureFlag("live-streaming.enabled", meetFeatureFlags.getBoolean("live-streaming.enabled"))
+                            .setFeatureFlag("meeting-name.enabled", meetFeatureFlags.getBoolean("meeting-name.enabled"))
+                            .setFeatureFlag("meeting-password.enabled", meetFeatureFlags.getBoolean("meeting-password.enabled"))
+                            .setFeatureFlag("pip.enabled", meetFeatureFlags.getBoolean("pip.enabled"))
+                            .setFeatureFlag("raise-hand.enabled", meetFeatureFlags.getBoolean("raise-hand.enabled"))
+                            .setFeatureFlag("recording.enabled", meetFeatureFlags.getBoolean("recording.enabled"))
+                            .setFeatureFlag("tile-view.enabled", meetFeatureFlags.getBoolean("tile-view.enabled"))
+                            .setFeatureFlag("toolbox.alwaysVisible", meetFeatureFlags.getBoolean("toolbox.alwaysVisible"))
+                            .setFeatureFlag("welcomepage.enabled", meetFeatureFlags.getBoolean("welcomepage.enabled"))
+
                             .build();
                     mJitsiMeetViewReference.getJitsiMeetView().join(options);
                 }
