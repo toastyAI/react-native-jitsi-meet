@@ -1,5 +1,5 @@
-# react-native-jitsi-meet
-React native wrapper for Jitsi Meet SDK
+# react-native-jitsi-meet using Toasty custom sdk
+React native wrapper for Jitsi Meet SDK pointed to [Toasty custom SDK build](https://github.com/toastyAI/jitsi-meet)
 
 ## Install
 
