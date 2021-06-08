@@ -8,6 +8,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import java.net.URL;
 import java.net.MalformedURLException;
 
+import com.facebook.react.bridge.NoSuchKeyException;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -62,33 +63,33 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                     RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
                             .setRoom(url)
                             .setSubject(meetOptions.getString("subject"))
-                            .setAudioMuted(meetOptions.getBoolean("audioMuted"))
-                            .setAudioOnly(meetOptions.getBoolean("audioOnly"))
-                            .setVideoMuted(meetOptions.getBoolean("videoMuted"))
+                            .setAudioMuted(tryGetBoolean(meetOptions, "audioMuted"))
+                            .setAudioOnly(tryGetBoolean(meetOptions, "audioOnly"))
+                            .setVideoMuted(tryGetBoolean(meetOptions, "videoMuted"))
                             .setUserInfo(_userInfo)
-                            .setFeatureFlag("add-people.enabled", meetFeatureFlags.getBoolean("add-people.enabled"))
-                            .setFeatureFlag("calendar.enabled", meetFeatureFlags.getBoolean("calendar.enabled"))
-                            .setFeatureFlag("call-integration.enabled", meetFeatureFlags.getBoolean("call-integration.enabled"))
-                            .setFeatureFlag("chat.enabled", meetFeatureFlags.getBoolean("chat.enabled"))
-                            .setFeatureFlag("close-captions.enabled", meetFeatureFlags.getBoolean("close-captions.enabled"))
-                            .setFeatureFlag("invite.enabled", meetFeatureFlags.getBoolean("invite.enabled"))
-                            .setFeatureFlag("ios.recording.enabled", meetFeatureFlags.getBoolean("ios.recording.enabled"))
-                            .setFeatureFlag("live-streaming.enabled", meetFeatureFlags.getBoolean("live-streaming.enabled"))
-                            .setFeatureFlag("meeting-name.enabled", meetFeatureFlags.getBoolean("meeting-name.enabled"))
-                            .setFeatureFlag("meeting-password.enabled", meetFeatureFlags.getBoolean("meeting-password.enabled"))
-                            .setFeatureFlag("pip.enabled", meetFeatureFlags.getBoolean("pip.enabled"))
-                            .setFeatureFlag("audio-mute.enabled", meetFeatureFlags.getBoolean("audio-mute.enabled"))
-                            .setFeatureFlag("video-mute.enabled", meetFeatureFlags.getBoolean("video-mute.enabled"))
-                            .setFeatureFlag("video-share.enabled", meetFeatureFlags.getBoolean("video-share.enabled"))
-                            .setFeatureFlag("overflow-menu.enabled", meetFeatureFlags.getBoolean("overflow-menu.enabled"))
-                            .setFeatureFlag("tile-view.enabled", meetFeatureFlags.getBoolean("tile-view.enabled"))
-                            .setFeatureFlag("raise-hand.enabled", meetFeatureFlags.getBoolean("raise-hand.enabled"))
-                            .setFeatureFlag("conference-timer.enabled", meetFeatureFlags.getBoolean("conference-timer.enabled"))
-                            .setFeatureFlag("recording.enabled", meetFeatureFlags.getBoolean("recording.enabled"))
-                            .setFeatureFlag("toolbox.alwaysVisible", meetFeatureFlags.getBoolean("toolbox.alwaysVisible"))
-                            .setFeatureFlag("notifications.enabled", meetFeatureFlags.getBoolean("notifications.enabled"))
-                            .setFeatureFlag("toolbox.enabled", meetFeatureFlags.getBoolean("toolbox.enabled"))
-                            .setFeatureFlag("welcomepage.enabled", meetFeatureFlags.getBoolean("welcomepage.enabled"))
+                            .setFeatureFlag("add-people.enabled", tryGetBoolean(meetFeatureFlags, "add-people.enabled"))
+                            .setFeatureFlag("calendar.enabled", tryGetBoolean(meetFeatureFlags, "calendar.enabled"))
+                            .setFeatureFlag("call-integration.enabled", tryGetBoolean(meetFeatureFlags, "call-integration.enabled"))
+                            .setFeatureFlag("chat.enabled", tryGetBoolean(meetFeatureFlags, "chat.enabled"))
+                            .setFeatureFlag("close-captions.enabled", tryGetBoolean(meetFeatureFlags, "close-captions.enabled"))
+                            .setFeatureFlag("invite.enabled", tryGetBoolean(meetFeatureFlags, "invite.enabled"))
+                            .setFeatureFlag("ios.recording.enabled", tryGetBoolean(meetFeatureFlags, "ios.recording.enabled"))
+                            .setFeatureFlag("live-streaming.enabled", tryGetBoolean(meetFeatureFlags, "live-streaming.enabled"))
+                            .setFeatureFlag("meeting-name.enabled", tryGetBoolean(meetFeatureFlags, "meeting-name.enabled"))
+                            .setFeatureFlag("meeting-password.enabled", tryGetBoolean(meetFeatureFlags, "meeting-password.enabled"))
+                            .setFeatureFlag("pip.enabled", tryGetBoolean(meetFeatureFlags, "pip.enabled"))
+                            .setFeatureFlag("audio-mute.enabled", tryGetBoolean(meetFeatureFlags, "audio-mute.enabled"))
+                            .setFeatureFlag("video-mute.enabled", tryGetBoolean(meetFeatureFlags, "video-mute.enabled"))
+                            .setFeatureFlag("video-share.enabled", tryGetBoolean(meetFeatureFlags, "video-share.enabled"))
+                            .setFeatureFlag("overflow-menu.enabled", tryGetBoolean(meetFeatureFlags, "overflow-menu.enabled"))
+                            .setFeatureFlag("tile-view.enabled", tryGetBoolean(meetFeatureFlags, "tile-view.enabled"))
+                            .setFeatureFlag("raise-hand.enabled", tryGetBoolean(meetFeatureFlags, "raise-hand.enabled"))
+                            .setFeatureFlag("conference-timer.enabled", tryGetBoolean(meetFeatureFlags, "conference-timer.enabled"))
+                            .setFeatureFlag("recording.enabled", tryGetBoolean(meetFeatureFlags, "recording.enabled"))
+                            .setFeatureFlag("toolbox.alwaysVisible", tryGetBoolean(meetFeatureFlags, "toolbox.alwaysVisible"))
+                            .setFeatureFlag("notifications.enabled", tryGetBoolean(meetFeatureFlags, "notifications.enabled"))
+                            .setFeatureFlag("toolbox.enabled", tryGetBoolean(meetFeatureFlags, "toolbox.enabled"))
+                            .setFeatureFlag("welcomepage.enabled", tryGetBoolean(meetFeatureFlags, "welcomepage.enabled"))
 
                             .build();
                     mJitsiMeetViewReference.getJitsiMeetView().join(options);
@@ -128,6 +129,14 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                 }
             }
         });
+    }
+
+    public static Boolean tryGetBoolean(ReadableMap map, String key) {
+        try {
+            return map.getBoolean(key);
+        } catch (NoSuchKeyException e) {
+            return false;
+        }
     }
 
     @ReactMethod
@@ -188,6 +197,18 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
         }
         catch(Exception e) {
             Log.d("JitsiMeet", "setVideoMuted: Error in setVideoMuted");
+        }
+    }
+
+    @ReactMethod
+    public void setTopView(Boolean enabled, Integer factor) {
+        try {
+            Log.d("JitsiMeet", "setTopView: Performing setTopView");
+            Intent topViewBroadcastIntent = BroadcastIntentHelper.buildSetTopViewIntent(enabled, factor);
+            LocalBroadcastManager.getInstance(getReactApplicationContext()).sendBroadcast(topViewBroadcastIntent);
+        }
+        catch(Exception e) {
+            Log.d("JitsiMeet", "setTopView: Error in setTopView");
         }
     }
 }

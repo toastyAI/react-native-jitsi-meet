@@ -145,6 +145,13 @@ RCT_EXPORT_METHOD(setVideoMuted:(BOOL)muted)
     });
 }
 
+RCT_EXPORT_METHOD(setTopView:(BOOL)topView : (nonnull NSNumber *)factor)
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [jitsiMeetView setTopView:topView : factor];
+    });
+}
+
 #pragma mark JitsiMeetViewDelegate
 
 - (void)conferenceJoined:(NSDictionary *)data {
